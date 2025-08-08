@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Portal Victorious - TheSlap</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .contenedor {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* BARRA IZQUIERDA */
+    .barra-lateral {
+      width: 200px;
+      background-color: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .logo-lateral {
+      width: 90%;
+      margin-bottom: 20px;
+    }
+
+    .poster {
+      width: 90%;
+      border-radius: 10px;
+    }
+
+    /* CONTENIDO PRINCIPAL */
+    .principal {
+      flex: 1;
+      background-color: #555;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ENCABEZADO */
+    .encabezado {
+      background-color: black;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .logo-principal {
+      width: 300px;
+    }
+
+    .menu {
+      margin-top: 10px;
+      background-color: #f68033;
+      padding: 10px;
+    }
+
+    .menu a {
+      color: black;
+      text-decoration: none;
+      margin: 0 15px;
+      font-family: 'Impact', sans-serif;
+      font-size: 18px;
+    }
+
+    /* PANEL NEGRO */
+    .contenido {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .panel-negro {
+      background-color: black;
+      width: 80%;
+      height: 60%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <!-- BARRA IZQUIERDA -->
+    <aside class="barra-lateral">
+      <img src="https://pbs.twimg.com/profile_images/2418829004/image_400x400.jpg" alt="TheSlap Logo" class="logo-lateral">
+      <img src="https://www.lavanguardia.com/peliculas-series/images/serie/poster/2010/3/w300/ulzaIIXNpeMUdhzuooQoOb5cXLD.jpg" alt="Poster Victorious" class="poster">
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="principal">
+      <!-- ENCABEZADO -->
+      <header class="encabezado">
+        <img src="https://www.viralizalo.com/imgentries/0430/bcd574b60a3ebde36e0a00c3c65bd6f1392016.jpg?1752170422" alt="Victorious Logo" class="logo-principal">
+        <nav class="menu">
+        <a href="inicio.php">login/Registraste</a>
+          <a href="blog.html">BLOG</a>
+          <a href="noticias.html">NOTICIAS</a>
+          <a href="tienda.php">Tienda</a> |
+          <a href="perfil.php">PERFILES</a>
+        </nav>
+      </header>
+
+      <!-- PANEL DE CONTENIDO -->
+      <section class="contenido">
+        <div class="panel-negro">
+          <!-- Aquí puede mostrarse el contenido dinámico -->
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+
