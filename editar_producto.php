@@ -2,21 +2,17 @@
 include('conexion.php');
 session_start();
 
-// Solo admins pueden acceder (ajusta según tu sistema de roles)
 if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
     header("Location: login.php");
     exit();
 }
 
-// Verifica si se pasó el ID del producto
-if (!isset($_GET['id'])) {
-    echo "ID de producto no especificado.";
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if (!$id) {
+    echo "ID de producto no especificado o inválido.";
     exit();
 }
 
-$id = intval($_GET['id']);
-
-// Obtener datos actuales del producto
 $sql = "SELECT * FROM productos WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
@@ -30,26 +26,29 @@ if ($resultado->num_rows === 0) {
 
 $producto = $resultado->fetch_assoc();
 
-// Procesar formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
-    $precio = $_POST['precio'];
-    $talla = $_POST['talla'];
-    $color = $_POST['color'];
-    $material = $_POST['material'];
-    $codigo = $_POST['codigo'];
-    $disponibilidad = $_POST['disponibilidad'];
+    $nombre = trim($_POST['nombre'] ?? '');
+    $descripcion = trim($_POST['descripcion'] ?? '');
+    $precio = floatval($_POST['precio'] ?? 0);
+    $talla = trim($_POST['talla'] ?? '');
+    $color = trim($_POST['color'] ?? '');
+    $material = trim($_POST['material'] ?? '');
+    $codigo = trim($_POST['codigo'] ?? '');
+    $disponibilidad = $_POST['disponibilidad'] ?? '';
 
-    if (isset($_FILES["imagen"]) && $_FILES["imagen"]["error"] == 0) {
+    if (isset($_FILES["imagen"]) && $_FILES["imagen"]["error"] === UPLOAD_ERR_OK) {
         $ruta = "uploads/";
         $nombre_imagen = uniqid("prod_") . basename($_FILES["imagen"]["name"]);
         $ruta_imagen = $ruta . $nombre_imagen;
-        move_uploaded_file($_FILES["imagen"]["tmp_name"], $ruta_imagen);
 
-        $sql_update = "UPDATE productos SET nombre=?, descripcion=?, precio=?, talla=?, color=?, material=?, codigo_producto=?, imagen=?, disponibilidad=? WHERE id=?";
-        $stmt = $conn->prepare($sql_update);
-        $stmt->bind_param("ssdssssssi", $nombre, $descripcion, $precio, $talla, $color, $material, $codigo, $ruta_imagen, $disponibilidad, $id);
+        if (move_uploaded_file($_FILES["imagen"]["tmp_name"], $ruta_imagen)) {
+            $sql_update = "UPDATE productos SET nombre=?, descripcion=?, precio=?, talla=?, color=?, material=?, codigo_producto=?, imagen=?, disponibilidad=? WHERE id=?";
+            $stmt = $conn->prepare($sql_update);
+            $stmt->bind_param("ssdssssssi", $nombre, $descripcion, $precio, $talla, $color, $material, $codigo, $ruta_imagen, $disponibilidad, $id);
+        } else {
+            echo "<div class='mensaje-error'>❌ Error al subir la imagen.</div>";
+            exit();
+        }
     } else {
         $sql_update = "UPDATE productos SET nombre=?, descripcion=?, precio=?, talla=?, color=?, material=?, codigo_producto=?, disponibilidad=? WHERE id=?";
         $stmt = $conn->prepare($sql_update);
@@ -60,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "<div class='mensaje-exito'>✅ Producto actualizado correctamente. <a href='admin_productos.php'>Volver</a></div>";
         exit();
     } else {
-        echo "<div class='mensaje-error'>❌ Error al actualizar: " . $stmt->error . "</div>";
+        echo "<div class='mensaje-error'>❌ Error al actualizar: " . htmlspecialchars($stmt->error) . "</div>";
     }
 }
 ?>
